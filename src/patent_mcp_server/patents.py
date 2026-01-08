@@ -1697,13 +1697,25 @@ def main():
         host = os.getenv("MCP_HOST", "0.0.0.0")
         port = int(os.getenv("MCP_PORT", "8000"))
         logger.info(f"Starting USPTO Patent MCP server with HTTP transport on {host}:{port}/mcp")
-        uvicorn.run(mcp.streamable_http_app(), host=host, port=port)
+        uvicorn.run(
+            mcp.streamable_http_app(),
+            host=host,
+            port=port,
+            proxy_headers=True,
+            forwarded_allow_ips="*"
+        )
     elif transport == "sse":
         import uvicorn
         host = os.getenv("MCP_HOST", "0.0.0.0")
         port = int(os.getenv("MCP_PORT", "8000"))
         logger.info(f"Starting USPTO Patent MCP server with SSE transport on {host}:{port}/sse")
-        uvicorn.run(mcp.sse_app(), host=host, port=port)
+        uvicorn.run(
+            mcp.sse_app(),
+            host=host,
+            port=port,
+            proxy_headers=True,
+            forwarded_allow_ips="*"
+        )
     else:
         logger.info("Starting USPTO Patent MCP server with stdio transport")
         mcp.run(transport='stdio')
