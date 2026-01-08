@@ -21,6 +21,7 @@ import sys
 from typing import Any, Dict, List, Optional, Union
 
 from mcp.server.fastmcp import FastMCP
+from mcp.server.fastmcp.server import TransportSecuritySettings
 from pydantic import ValidationError
 
 from patent_mcp_server.config import config
@@ -47,8 +48,14 @@ from patent_mcp_server.uspto.enriched_citation_client import EnrichedCitationCli
 from patent_mcp_server.uspto.litigation_client import LitigationClient
 from patent_mcp_server.patentsview.patentsview_client import PatentsViewClient
 
-# Initialize FastMCP server
-mcp = FastMCP("uspto_patent_tools")
+# Initialize FastMCP server with DNS rebinding protection disabled
+# (running behind Traefik reverse proxy which handles security)
+mcp = FastMCP(
+    "uspto_patent_tools",
+    transport_security=TransportSecuritySettings(
+        enable_dns_rebinding_protection=False
+    )
+)
 
 # Set up logging with configured level
 logging.basicConfig(

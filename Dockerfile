@@ -1,7 +1,7 @@
 # USPTO Patent MCP Server
 # Native HTTP transport via FastMCP
 
-FROM python:3.12-slim
+FROM python:3.11-slim
 
 WORKDIR /app
 
