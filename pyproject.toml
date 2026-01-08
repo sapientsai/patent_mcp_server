@@ -33,6 +33,7 @@ dependencies = [
     "pydantic>=2.0.0",
     "python-dotenv>=1.0.1",
     "python-multipart>=0.0.22",  # CVE-2026-24486 fix
+    "starlette==0.47.1",
     "tenacity>=8.0.0",
     "uvicorn>=0.30.0",
 ]
