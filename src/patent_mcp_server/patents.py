@@ -1687,9 +1687,26 @@ async def get_party_litigation(
 # =====================================================================
 
 def main():
-    """Initialize and run the server with stdio transport."""
-    logger.info("Starting USPTO Patent MCP server with stdio transport")
-    mcp.run(transport='stdio')
+    """Initialize and run the server with configurable transport."""
+    import os
+
+    transport = os.getenv("MCP_TRANSPORT", "stdio")
+
+    if transport == "http":
+        import uvicorn
+        host = os.getenv("MCP_HOST", "0.0.0.0")
+        port = int(os.getenv("MCP_PORT", "8000"))
+        logger.info(f"Starting USPTO Patent MCP server with HTTP transport on {host}:{port}/mcp")
+        uvicorn.run(mcp.streamable_http_app(), host=host, port=port)
+    elif transport == "sse":
+        import uvicorn
+        host = os.getenv("MCP_HOST", "0.0.0.0")
+        port = int(os.getenv("MCP_PORT", "8000"))
+        logger.info(f"Starting USPTO Patent MCP server with SSE transport on {host}:{port}/sse")
+        uvicorn.run(mcp.sse_app(), host=host, port=port)
+    else:
+        logger.info("Starting USPTO Patent MCP server with stdio transport")
+        mcp.run(transport='stdio')
 
 
 if __name__ == "__main__":
